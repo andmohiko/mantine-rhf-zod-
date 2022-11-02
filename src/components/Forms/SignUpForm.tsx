@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
   Checkbox,
@@ -12,18 +13,35 @@ import {
 } from '@mantine/core'
 import { DatePicker } from '@mantine/dates'
 import Link from 'next/link'
-import { useForm } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { z } from 'zod'
+
+const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+
+const SignUpSchema = z.object({
+  username: z.string().min(1, { message: 'ユーザー名を入力してください' }),
+  email: z
+    .string()
+    .regex(emailPattern, { message: '無効なメールアドレスです' }),
+  password: z
+    .string()
+    .min(8, { message: 'パスワードは8文字以上にしてください' }),
+})
+
+type SignUpInputType = z.infer<typeof SignUpSchema>
 
 export const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting }
-  } = useForm()
-  const [birthday, setBirthday] = useState<Date | null>(new Date())
-  const [gender, setGender] = useState<string | null>()
+    formState: { errors, isSubmitting }
+  } = useForm<SignUpInputType>({ resolver: zodResolver(SignUpSchema) })
 
-  const onSubmit = (data: any) => {
+  const [birthday, setBirthday] = useState<Date | null>()
+  const [gender, setGender] = useState<string | null>()
+  const [checked, setChecked] = useState<boolean>(false)
+
+  const onSubmit: SubmitHandler<SignUpInputType> = (data) => {
     console.log('submit', {
       ...data,
       birthday,
@@ -38,15 +56,21 @@ export const SignUpForm = () => {
         width: '480px'
       }}
     >
-      <Title order={1}>ログイン</Title>
+      <Title order={1}>ユーザー登録</Title>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
           <Stack spacing="md">
-            <TextInput label="ユーザー名" {...register('username')} />
+            <TextInput
+              label="ユーザー名"
+              required
+              error={errors.username?.message}
+              {...register('username')}
+            />
             <DatePicker
               label="生年月日"
               placeholder="日付を選択してください"
+              required
               value={birthday}
               onChange={setBirthday}
             />
@@ -58,24 +82,37 @@ export const SignUpForm = () => {
                 { value: 'male', label: '男性' },
                 { value: 'unknown', label: 'その他' }
               ]}
+              required
               value={gender}
               onChange={setGender}
             />
             <TextInput
               label="メールアドレス"
               placeholder="email@example.com"
+              required
+              error={errors.email?.message}
               {...register('email')}
             />
-            <PasswordInput label="パスワード" {...register('password')} />
-            <Checkbox label="利用規約に同意しました" />
+            <PasswordInput
+              label="パスワード"
+              required
+              error={errors.password?.message}
+              {...register('password')}
+            />
+            <Checkbox
+              label="利用規約に同意しました"
+              required
+              checked={checked}
+              onChange={(event) => setChecked(event.currentTarget.checked)}
+            />
           </Stack>
 
           <Text size="xs">
             <Link href="#">パスワードを忘れた場合はこちら</Link>
           </Text>
 
-          <Button type="submit" loading={isSubmitting}>
-            ログイン
+          <Button type="submit" disabled={!checked} loading={isSubmitting}>
+            登録する
           </Button>
         </Stack>
       </form>
