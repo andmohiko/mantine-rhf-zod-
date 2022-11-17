@@ -16,16 +16,12 @@ import Link from 'next/link'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 
-const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-
 const SignUpSchema = z.object({
   username: z.string().min(1, { message: 'ユーザー名を入力してください' }),
-  email: z
-    .string()
-    .regex(emailPattern, { message: '無効なメールアドレスです' }),
+  email: z.string().email(),
   password: z
     .string()
-    .min(8, { message: 'パスワードは8文字以上にしてください' }),
+    .min(8, { message: 'パスワードは8文字以上にしてください' })
 })
 
 type SignUpInputType = z.infer<typeof SignUpSchema>
