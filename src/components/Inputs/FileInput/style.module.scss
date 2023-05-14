@@ -1,0 +1,21 @@
+.title {
+  font-size: 14px;
+  line-height: 1;
+  color: #333;
+}
+
+.dropzone {
+  width: 100%;
+  text-align: center;
+
+  .label {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+.error {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #f5222d;
+}

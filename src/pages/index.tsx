@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import type { NextPage } from 'next'
 
-import { DefaultLayout } from '@/components/Layouts/DefaultLayout'
+import { DefaultLayout } from '~/components/Layouts/DefaultLayout'
 
 const Home: NextPage = () => {
   return (
