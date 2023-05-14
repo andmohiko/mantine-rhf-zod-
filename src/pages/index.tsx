@@ -9,9 +9,7 @@ const Home: NextPage = () => {
   return (
     <DefaultLayout>
       <Link href="/signup" passHref>
-        <Anchor>
-          <Text size="xl">サインアップはこちら</Text>
-        </Anchor>
+        <Text size="xl">サインアップはこちら</Text>
       </Link>
     </DefaultLayout>
   )
