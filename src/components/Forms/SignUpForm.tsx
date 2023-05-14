@@ -34,9 +34,11 @@ export const SignUpForm = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpInputType>({ resolver: zodResolver(SignUpSchema) })
+  } = useForm<SignUpInputType>({
+    resolver: zodResolver(SignUpSchema),
+    mode: 'all',
+  })
 
-  const [gender, setGender] = useState<string | null>()
   const [checked, setChecked] = useState<boolean>(false)
 
   const onSubmit: SubmitHandler<SignUpInputType> = (data) => {
