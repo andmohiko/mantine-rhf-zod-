@@ -54,7 +54,7 @@ export const FlexBox = ({
       height,
       gap,
       padding: `${pt || py}px ${pr || px}px ${pb || py}px ${pl || px}px`,
-      margin: `${mt || my}mx ${mr || mx}mx ${mb || my}mx ${ml || mx}px`,
+      margin: `${mt || my}px ${mr || mx}px ${mb || my}px ${ml || mx}px`,
       ...style,
     }}
     {...props}
