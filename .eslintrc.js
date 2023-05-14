@@ -3,45 +3,46 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    es2020: true
+    es2020: true,
   },
   extends: [
+    'next/core-web-vitals',
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
-    'plugin:prettier/recommended'
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 2020,
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['@typescript-eslint', 'react', 'import'],
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       },
       typescript: {
         config: 'tsconfig.json',
-        alwaysTryTypes: true
-      }
-    }
+        alwaysTryTypes: true,
+      },
+    },
   },
   rules: {
     '@typescript-eslint/ban-types': [
       'error',
       {
         types: {
-          '{}': false
-        }
-      }
+          '{}': false,
+        },
+      },
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
     'react/prop-types': ['off'],
@@ -57,32 +58,44 @@ module.exports = {
           'sibling',
           'index',
           'object',
-          'type'
+          'type',
         ],
         pathGroups: [
           {
             pattern: '{react,react-dom/**,react-router-dom}',
             group: 'builtin',
-            position: 'before'
-          }
+            position: 'before',
+          },
         ],
         pathGroupsExcludedImportTypes: ['builtin'],
         alphabetize: {
-          order: 'asc'
+          order: 'asc',
         },
-        'newlines-between': 'always'
-      }
+        'newlines-between': 'always',
+      },
     ],
-    'prettier/prettier': [
+    // 詳細: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/array-type.md
+    '@typescript-eslint/array-type': [
       'error',
       {
-        trailingComma: 'none',
-        endOfLine: 'lf',
-        semi: false,
-        singleQuote: true,
-        printWidth: 80,
-        tabWidth: 2
-      }
-    ]
-  }
+        default: 'generic',
+      },
+    ],
+    // 詳細: https://eslint.org/docs/latest/rules/no-restricted-imports#rule-details
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['../'],
+      },
+    ],
+    // 詳細: https://eslint.org/docs/latest/rules/padding-line-between-statements#rule-details
+    '@typescript-eslint/padding-line-between-statements': [
+      'error',
+      {
+        blankLine: 'always',
+        prev: 'import',
+        next: ['const', 'type'],
+      },
+    ],
+  },
 }

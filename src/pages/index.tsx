@@ -1,4 +1,4 @@
-import { Anchor, Text } from '@mantine/core'
+import { Text } from '@mantine/core'
 import Link from 'next/link'
 
 import type { NextPage } from 'next'
