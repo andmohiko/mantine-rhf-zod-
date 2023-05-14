@@ -6,7 +6,6 @@ import {
   Checkbox,
   PasswordInput,
   Stack,
-  Select,
   Text,
   TextInput,
   NativeSelect,
@@ -44,7 +43,6 @@ export const SignUpForm = () => {
   const onSubmit: SubmitHandler<SignUpInputType> = (data) => {
     console.log('submit', {
       ...data,
-      gender,
     })
   }
 
