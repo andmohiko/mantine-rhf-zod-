@@ -12,7 +12,7 @@ export type FileObject = {
 export const useFileInput = (
   files: Array<FileObject>,
   setFiles: (files: Array<FileObject>) => void,
-  max: number,
+  maxFiles: number,
 ): [
   Array<FileObject>,
   {
@@ -25,7 +25,7 @@ export const useFileInput = (
   },
 ] => {
   const [loading, setLoading] = useState<boolean>(false)
-  const disabled = files.length >= max
+  const disabled = files.length >= maxFiles
 
   const removeFile = useCallback(
     (index: number) => {

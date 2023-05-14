@@ -58,7 +58,7 @@ export const FileInput = ({
         disabled={states.disabled}
         className={styles.dropzone}
       >
-        <FlexBox gap={8}>
+        <FlexBox gap={16} justify="center">
           <Dropzone.Accept>
             <AiOutlineUpload color="#777" size={50} />
           </Dropzone.Accept>
