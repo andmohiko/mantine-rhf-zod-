@@ -47,7 +47,7 @@ export const FileUploadForm = (): React.ReactElement => {
             <FileInput
               defaultValue={field.value}
               setFiles={field.onChange}
-              max={4}
+              maxFiles={4}
               error={errors.files?.message}
             />
           )}

@@ -14,17 +14,21 @@ import { FlexBox } from '~/components/Base/FlexBox'
 type Props = {
   defaultValue: Array<FileObject>
   setFiles: (files: Array<FileObject>) => void
-  max?: number
+  maxFiles?: number
   error: string | undefined
 }
 
 export const FileInput = ({
   defaultValue,
   setFiles,
-  max = 1,
+  maxFiles = 1,
   error,
 }: Props): React.ReactElement => {
-  const [files, handlers, states] = useFileInput(defaultValue, setFiles, max)
+  const [files, handlers, states] = useFileInput(
+    defaultValue,
+    setFiles,
+    maxFiles,
+  )
 
   return (
     <FlexBox gap={8} align="flex-start">
