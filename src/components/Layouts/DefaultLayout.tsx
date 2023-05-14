@@ -1,26 +1,31 @@
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 
-import { Box } from '@mantine/core'
-
-import { PageHead } from '@/components/Head'
+import { FlexBox } from '~/components/Base/FlexBox'
+import { LoadingOverlay } from '~/components/Base/Loading'
+import { PageHead } from '~/components/Head'
 
 type Props = {
   children?: ReactNode
 }
 
-export const DefaultLayout = ({ children }: Props): ReactElement => (
-  <div>
-    <PageHead />
-    <Box
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh'
-      }}
-    >
-      {children}
-    </Box>
-  </div>
-)
+export const DefaultLayout = ({ children }: Props): ReactElement => {
+  // recoilなどに移してローディングをグローバルで管理する
+  const [loading] = useState<boolean>(false)
+
+  return (
+    <>
+      <PageHead />
+
+      <FlexBox
+        style={{
+          position: 'relative',
+        }}
+      >
+        {loading && <LoadingOverlay />}
+        <FlexBox px={32} py={16}>
+          {children}
+        </FlexBox>
+      </FlexBox>
+    </>
+  )
+}
