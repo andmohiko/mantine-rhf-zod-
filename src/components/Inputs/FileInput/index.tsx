@@ -58,7 +58,7 @@ export const FileInput = ({
         maxSize={100 * 1024 ** 2}
         accept={IMAGE_MIME_TYPE}
         multiple
-        maxFiles={max - files.length}
+        maxFiles={maxFiles - files.length}
         disabled={states.disabled}
         className={styles.dropzone}
       >
