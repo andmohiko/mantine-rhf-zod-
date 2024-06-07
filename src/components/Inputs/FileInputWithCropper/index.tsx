@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 import { LoadingOverlay, Image, Box, CloseButton, Overlay } from '@mantine/core'
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
+import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { AiOutlineUpload } from 'react-icons/ai'
 import { BiErrorCircle } from 'react-icons/bi'
@@ -14,6 +15,8 @@ import styles from './style.module.scss'
 import { useFileInput, FileObject } from './useFileInputByBase64'
 
 import { FlexBox } from '~/components/Base/FlexBox'
+import { BaseModal } from '~/components/Modals/BaseModal'
+import { CropModal } from '~/components/Modals/CropModal'
 
 type Props = {
   defaultValue: Array<FileObject>
@@ -33,6 +36,7 @@ export const FileInputWithCropper = ({
   //   setFiles,
   //   maxFiles,
   // )
+  const [isOpen, handlers] = useDisclosure()
 
   const [fileData, setFileData] = useState<File | undefined>();
   const [objectUrl, setObjectUrl] = useState<string | undefined>();
@@ -53,6 +57,7 @@ export const FileInputWithCropper = ({
     if (fileData instanceof File) {
       objectUrl && URL.revokeObjectURL(objectUrl);
       setObjectUrl(URL.createObjectURL(fileData));
+      handlers.open();
     } else {
       setObjectUrl(undefined);
     }
@@ -63,7 +68,6 @@ export const FileInputWithCropper = ({
   // アップロードした画像のObjectUrlをもとに、imgのHTMLElementを作る
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve) => {
-      // const img: HTMLImageElement = new Image() as HTMLImageElement
       const img: HTMLImageElement = document.createElement("img");
       img.src = src;
       img.onload = () => resolve(img);
@@ -107,61 +111,51 @@ export const FileInputWithCropper = ({
       });
     }
   };
-
+  const onCrop = () => {
+    makeProfileImgObjectUrl();
+    handlers.close();
+  }
 
   return (
     <div>
-      <form
-        onSubmit={(e: FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          makeProfileImgObjectUrl();
+      <Dropzone
+        // onDrop={handlers.add}
+        onDrop={(fileWithPath) => setFileData(fileWithPath[0])}
+        onReject={() => {
+          notifications.show({
+            title: 'ファイルのアップロードに失敗しました',
+            message: '',
+            icon: <BiErrorCircle />,
+            withCloseButton: true,
+            autoClose: 8000,
+            color: 'red',
+          })
         }}
+        maxSize={100 * 1024 ** 2}
+        accept={IMAGE_MIME_TYPE}
+        multiple
+        className={styles.dropzone}
       >
-        {/* <input
-          type="file"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            e.target.files && setFileData(e.target.files[0]);
-          }}
-        /> */}
-        <Dropzone
-          // onDrop={handlers.add}
-          onDrop={(fileWithPath) => setFileData(fileWithPath[0])}
-          onReject={() => {
-            notifications.show({
-              title: 'ファイルのアップロードに失敗しました',
-              message: '',
-              icon: <BiErrorCircle />,
-              withCloseButton: true,
-              autoClose: 8000,
-              color: 'red',
-            })
-          }}
-          maxSize={100 * 1024 ** 2}
-          accept={IMAGE_MIME_TYPE}
-          multiple
-          className={styles.dropzone}
-        >
-          <FlexBox gap={16} justify="center">
-            <Dropzone.Accept>
-              <AiOutlineUpload color="#777" size={50} />
-            </Dropzone.Accept>
-            <Dropzone.Reject>
-              <RxCross1 color="#777" size={50} />
-            </Dropzone.Reject>
-            <Dropzone.Idle>
-              <MdOutlineAddPhotoAlternate color="#777" size={50} />
-            </Dropzone.Idle>
-            <span className={styles.label}>
-              クリックしてファイルを選択、
-              <br />
-              もしくはドラッグ＆ドロップしてください
-            </span>
-          </FlexBox>
-        </Dropzone>
-        <button>切り取り</button>
-      </form>
-      <div>
-        {objectUrl && (
+        <FlexBox gap={16} justify="center">
+          <Dropzone.Accept>
+            <AiOutlineUpload color="#777" size={50} />
+          </Dropzone.Accept>
+          <Dropzone.Reject>
+            <RxCross1 color="#777" size={50} />
+          </Dropzone.Reject>
+          <Dropzone.Idle>
+            <MdOutlineAddPhotoAlternate color="#777" size={50} />
+          </Dropzone.Idle>
+          <span className={styles.label}>
+            クリックしてファイルを選択、
+            <br />
+            もしくはドラッグ＆ドロップしてください
+          </span>
+        </FlexBox>
+      </Dropzone>
+
+      {objectUrl && (
+        <CropModal isOpen={isOpen} onClose={handlers.close} onSave={onCrop}>
           <ReactCrop
             crop={crop}
             onChange={(c) => setCrop(c)}
@@ -171,10 +165,10 @@ export const FileInputWithCropper = ({
           >
             <img src={objectUrl} alt="" style={{ width: "100%" }} />
           </ReactCrop>
-        )}
-      </div>
+        </CropModal>
+      )}
       <div>
-        {profileImg ? <img src={profileImg} alt="プロフィール画像" /> : ""}
+        {profileImg ? <img src={profileImg} alt="プロフィール画像" /> : null}
       </div>
     </div>
   )
