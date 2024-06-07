@@ -11,15 +11,17 @@ type Props = {
   children: React.ReactNode
   isOpen: boolean
   onClose: () => void
-  onSave: () => void
+  onSave?: () => void
+  title: string
   size?: '95%' | 'auto'
 }
 
-export const CropModal = ({
+export const ActionModal = ({
   children,
   isOpen,
   onClose,
   onSave,
+  title,
   size = '95%',
 }: Props): React.ReactNode => {
   return (
@@ -41,12 +43,14 @@ export const CropModal = ({
         <div className={styles.close}>
           <IconButton icon={<IoMdArrowRoundBack size={24} />} onClick={onClose} importance='tertiary' />
         </div>
-        <p className={styles.title}>画像を編集</p>
-        <div className={styles.action}>
-          <BasicButton onClick={onSave}>
-            <span className={styles.save}>適用</span>
-          </BasicButton>
-        </div>
+        <p className={styles.title}>{title}</p>
+        {onSave && (
+          <div className={styles.action}>
+            <BasicButton onClick={onSave}>
+              <span className={styles.save}>適用</span>
+            </BasicButton>
+          </div>
+        )}
       </div>
       <div className={styles.body}>{children}</div>
     </Modal>

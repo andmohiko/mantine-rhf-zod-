@@ -15,8 +15,7 @@ import styles from './style.module.scss'
 import { useFileInput, FileObject } from './useFileInputByBase64'
 
 import { FlexBox } from '~/components/Base/FlexBox'
-import { BaseModal } from '~/components/Modals/BaseModal'
-import { CropModal } from '~/components/Modals/CropModal'
+import { ActionModal } from '~/components/Modals/ActionModal'
 
 type Props = {
   defaultValue: Array<FileObject>
@@ -155,7 +154,7 @@ export const FileInputWithCropper = ({
       </Dropzone>
 
       {objectUrl && (
-        <CropModal isOpen={isOpen} onClose={handlers.close} onSave={onCrop}>
+        <ActionModal isOpen={isOpen} onClose={handlers.close} onSave={onCrop} title='画像を編集'>
           <ReactCrop
             crop={crop}
             onChange={(c) => setCrop(c)}
@@ -165,7 +164,7 @@ export const FileInputWithCropper = ({
           >
             <img src={objectUrl} alt="" style={{ width: "100%" }} />
           </ReactCrop>
-        </CropModal>
+        </ActionModal>
       )}
       <div>
         {profileImg ? <img src={profileImg} alt="プロフィール画像" /> : null}
