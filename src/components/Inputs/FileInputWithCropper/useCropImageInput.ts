@@ -16,7 +16,7 @@ export const useCropImageInput = (
 ): [
   {
     file: FileObject | undefined
-    objectUrl: string | undefined
+    uncroppedImageUrl: string | undefined
     crop: Crop
   },
   {
@@ -36,7 +36,9 @@ export const useCropImageInput = (
   const isDisabled = Boolean(file)
   const [isOpen, handlers] = useDisclosure()
   const [fileData, setFileData] = useState<File | undefined>()
-  const [objectUrl, setObjectUrl] = useState<string | undefined>()
+  const [uncroppedImageUrl, setUncroppedImageUrl] = useState<
+    string | undefined
+  >()
   const [crop, setCrop] = useState<Crop>({
     unit: 'px',
     x: 0,
@@ -45,7 +47,7 @@ export const useCropImageInput = (
     height: 200,
   })
 
-  // canvasで画像を扱うため、アップロードした画像のObjectUrlをもとに、imgのHTMLElementを作る
+  // canvasで画像を扱うため、アップロードした画像のuncroppedImageUrlをもとに、imgのHTMLElementを作る
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve) => {
       const img: HTMLImageElement = document.createElement('img')
@@ -56,7 +58,7 @@ export const useCropImageInput = (
 
   // 切り取った画像のObjectUrlを作成し、ステイトに保存する
   const makeProfileImgObjectUrl = async () => {
-    if (objectUrl) {
+    if (uncroppedImageUrl) {
       const canvas = document.createElement('canvas')
       canvas.width = crop.width
       canvas.height = crop.height
@@ -72,7 +74,7 @@ export const useCropImageInput = (
       )
       ctx.clip()
 
-      const img = await loadImage(objectUrl)
+      const img = await loadImage(uncroppedImageUrl)
       ctx.drawImage(
         img,
         crop.x,
@@ -102,11 +104,11 @@ export const useCropImageInput = (
 
   useEffect(() => {
     if (fileData instanceof File) {
-      objectUrl && URL.revokeObjectURL(objectUrl)
-      setObjectUrl(URL.createObjectURL(fileData))
+      uncroppedImageUrl && URL.revokeObjectURL(uncroppedImageUrl)
+      setUncroppedImageUrl(URL.createObjectURL(fileData))
       handlers.open()
     } else {
-      setObjectUrl(undefined)
+      setUncroppedImageUrl(undefined)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileData])
@@ -126,7 +128,7 @@ export const useCropImageInput = (
   return [
     {
       file,
-      objectUrl,
+      uncroppedImageUrl,
       crop,
     },
     {

@@ -26,7 +26,7 @@ export const FileInputWithCropper = ({
   error,
 }: Props): React.ReactElement => {
   const [
-    { file, objectUrl, crop },
+    { file, uncroppedImageUrl, crop },
     { onSelectImage, remove, onCrop, onChangeCrop, closeCropper },
     { isOpenCropper, isDisabled, isLoading },
   ] = useCropImageInput(defaultValue, setFile)
@@ -75,7 +75,7 @@ export const FileInputWithCropper = ({
           </Dropzone>
           {error && <span className={styles.error}>{error}</span>}
 
-          {objectUrl && (
+          {uncroppedImageUrl && (
             <ActionModal
               isOpen={isOpenCropper}
               onClose={closeCropper}
@@ -89,7 +89,7 @@ export const FileInputWithCropper = ({
                 circularCrop={true}
                 keepSelection={true}
               >
-                <img src={objectUrl} alt="" style={{ width: '100%' }} />
+                <img src={uncroppedImageUrl} alt="" style={{ width: '100%' }} />
               </ReactCrop>
             </ActionModal>
           )}
