@@ -49,7 +49,7 @@ export const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
-        <Stack spacing="md">
+        <Stack gap="md">
           <TextInput
             label="ユーザー名"
             required

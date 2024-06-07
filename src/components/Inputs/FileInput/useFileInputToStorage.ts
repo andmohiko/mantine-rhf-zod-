@@ -48,7 +48,7 @@ export const useFileInput = (
         setLoading(true)
         const newFiles: Array<FileObject> = []
         for (let i = 0; i < inputFiles.length; i++) {
-          const file = files[i]
+          const file = inputFiles[i]
           const filename = uuid()
           const fileURL = await uploadImage(`${storagePath}/${filename}`, file)
           newFiles.concat(fileURL)
