@@ -33,7 +33,7 @@ export const ImageCropForm = (): React.ReactNode => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FlexBox gap={40} align="stretch">
+      <FlexBox gap={40}>
         <Controller
           name="file"
           control={control}

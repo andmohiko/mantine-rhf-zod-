@@ -64,16 +64,10 @@ export const FileInputWithCropper = ({
               <Dropzone.Idle>
                 <MdOutlineAddPhotoAlternate color="#777" size={50} />
               </Dropzone.Idle>
-              <span className={styles.label}>
-                クリックしてファイルを選択、
-                <br />
-                もしくはドラッグ＆ドロップしてください
-              </span>
               {isLoading && <LoadingOverlay visible />}
             </FlexBox>
             {isDisabled && <Overlay color="#fff" opacity={0.7} />}
           </Dropzone>
-          {error && <span className={styles.error}>{error}</span>}
 
           {uncroppedImageUrl && (
             <ActionModal
@@ -108,16 +102,16 @@ export const ImagePreview = ({
   file,
   onRemove,
 }: ImagePreviewProps): React.ReactElement => (
-  <Box pos="relative">
-    <Image src={file} alt="" />
+  <div className={styles.imagePreview}>
+    <Image src={file} alt="" className={styles.image} />
     <CloseButton
       size="sm"
       variant="light"
       pos="absolute"
-      top={4}
-      right={4}
+      top={-4}
+      right={-4}
       color="gray"
       onClick={onRemove}
     />
-  </Box>
+  </div>
 )
