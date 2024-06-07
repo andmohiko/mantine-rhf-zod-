@@ -68,6 +68,7 @@ export const FileInputWithCropper = ({
             </FlexBox>
             {isDisabled && <Overlay color="#fff" opacity={0.7} />}
           </Dropzone>
+          {error && <span className={styles.error}>{error}</span>}
 
           {uncroppedImageUrl && (
             <ActionModal

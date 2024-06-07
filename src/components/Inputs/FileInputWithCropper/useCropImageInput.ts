@@ -56,9 +56,13 @@ export const useCropImageInput = (
     })
   }
 
-  // 切り取った画像のObjectUrlを作成し、ステイトに保存する
-  const makeProfileImgObjectUrl = async () => {
+  // 切り取った画像のObjectUrlを作成し、フォームに保存する
+  const createCroppedImageUrl = async () => {
     if (uncroppedImageUrl) {
+      const img = await loadImage(uncroppedImageUrl)
+      const scaleX = img.naturalWidth / img.width
+      const scaleY = img.naturalHeight / img.height
+
       const canvas = document.createElement('canvas')
       canvas.width = crop.width
       canvas.height = crop.height
@@ -74,13 +78,12 @@ export const useCropImageInput = (
       )
       ctx.clip()
 
-      const img = await loadImage(uncroppedImageUrl)
       ctx.drawImage(
         img,
-        crop.x,
-        crop.y,
-        crop.width,
-        crop.height,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
         0,
         0,
         crop.width,
@@ -97,7 +100,7 @@ export const useCropImageInput = (
 
   const onCrop = () => {
     setIsLoading(true)
-    makeProfileImgObjectUrl()
+    createCroppedImageUrl()
     handlers.close()
     setIsLoading(false)
   }
