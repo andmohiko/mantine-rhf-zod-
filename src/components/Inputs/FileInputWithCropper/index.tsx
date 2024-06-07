@@ -1,173 +1,100 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-
 import { LoadingOverlay, Image, Box, CloseButton, Overlay } from '@mantine/core'
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
-import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { AiOutlineUpload } from 'react-icons/ai'
 import { BiErrorCircle } from 'react-icons/bi'
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md'
 import { RxCross1 } from 'react-icons/rx'
-import ReactCrop from "react-image-crop";
-import { Crop } from "react-image-crop/dist/types";
+// eslint-disable-next-line import/no-named-as-default
+import ReactCrop from 'react-image-crop'
 
 import styles from './style.module.scss'
-import { FileObject } from './useFileInputToStorage'
+import { useCropImageInput, type FileObject } from './useCropImageInput'
 
 import { FlexBox } from '~/components/Base/FlexBox'
 import { ActionModal } from '~/components/Modals/ActionModal'
 
 type Props = {
-  defaultValue: Array<FileObject>
-  setFiles: (files: Array<FileObject>) => void
-  maxFiles?: number
+  defaultValue: FileObject
+  setFile: (file: FileObject | undefined) => void
   error: string | undefined
 }
 
 export const FileInputWithCropper = ({
   defaultValue,
-  setFiles,
-  maxFiles = 1,
+  setFile,
   error,
 }: Props): React.ReactElement => {
-  // const [files, handlers, states] = useFileInput(
-  //   defaultValue,
-  //   setFiles,
-  //   maxFiles,
-  // )
-  const [isOpen, handlers] = useDisclosure()
-
-  const [fileData, setFileData] = useState<File | undefined>();
-  const [objectUrl, setObjectUrl] = useState<string | undefined>();
-
-  //プロフィールイメージ
-  const [profileImg, setProfileImg] = useState<string>("");
-
-  //Crop
-  const [crop, setCrop] = useState<Crop>({
-    unit: "px", // 'px' または '%' にすることができます
-    x: 0,
-    y: 0,
-    width: 200,
-    height: 200,
-  });
-
-  useEffect(() => {
-    if (fileData instanceof File) {
-      objectUrl && URL.revokeObjectURL(objectUrl);
-      setObjectUrl(URL.createObjectURL(fileData));
-      handlers.open();
-    } else {
-      setObjectUrl(undefined);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileData]);
-
-  // canvasで画像を扱うため
-  // アップロードした画像のObjectUrlをもとに、imgのHTMLElementを作る
-  const loadImage = (src: string): Promise<HTMLImageElement> => {
-    return new Promise((resolve) => {
-      const img: HTMLImageElement = document.createElement("img");
-      img.src = src;
-      img.onload = () => resolve(img);
-    });
-  };
-
-  //切り取った画像のObjectUrlを作成し、ステイトに保存する
-  const makeProfileImgObjectUrl = async () => {
-    if (objectUrl) {
-      const canvas = document.createElement("canvas");
-      canvas.width = crop.width;
-      canvas.height = crop.height;
-      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      ctx.beginPath();
-      ctx.arc(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2,
-        0,
-        2 * Math.PI,
-        false
-      );
-      ctx.clip();
-
-      const img = await loadImage(objectUrl);
-      console.log(img.width, img.naturalWidth);
-      ctx.drawImage(
-        img,
-        crop.x,
-        crop.y,
-        crop.width,
-        crop.height,
-        0,
-        0,
-        crop.width,
-        crop.height
-      );
-
-      canvas.toBlob((result) => {
-        if (result instanceof Blob) setProfileImg(URL.createObjectURL(result));
-      });
-    }
-  };
-  const onCrop = () => {
-    makeProfileImgObjectUrl();
-    handlers.close();
-  }
+  const [
+    { file, objectUrl, crop },
+    { onSelectImage, remove, onCrop, onChangeCrop, closeCropper },
+    { isOpenCropper, isDisabled, isLoading },
+  ] = useCropImageInput(defaultValue, setFile)
 
   return (
     <div>
-      <Dropzone
-        // onDrop={handlers.add}
-        onDrop={(fileWithPath) => setFileData(fileWithPath[0])}
-        onReject={() => {
-          notifications.show({
-            title: 'ファイルのアップロードに失敗しました',
-            message: '',
-            icon: <BiErrorCircle />,
-            withCloseButton: true,
-            autoClose: 8000,
-            color: 'red',
-          })
-        }}
-        maxSize={100 * 1024 ** 2}
-        accept={IMAGE_MIME_TYPE}
-        multiple
-        className={styles.dropzone}
-      >
-        <FlexBox gap={16} justify="center">
-          <Dropzone.Accept>
-            <AiOutlineUpload color="#777" size={50} />
-          </Dropzone.Accept>
-          <Dropzone.Reject>
-            <RxCross1 color="#777" size={50} />
-          </Dropzone.Reject>
-          <Dropzone.Idle>
-            <MdOutlineAddPhotoAlternate color="#777" size={50} />
-          </Dropzone.Idle>
-          <span className={styles.label}>
-            クリックしてファイルを選択、
-            <br />
-            もしくはドラッグ＆ドロップしてください
-          </span>
-        </FlexBox>
-      </Dropzone>
-
-      {objectUrl && (
-        <ActionModal isOpen={isOpen} onClose={handlers.close} onSave={onCrop} title='画像を編集'>
-          <ReactCrop
-            crop={crop}
-            onChange={(c) => setCrop(c)}
-            aspect={1}
-            circularCrop={true}
-            keepSelection={true}
+      {file ? (
+        <ImagePreview file={file} onRemove={remove} />
+      ) : (
+        <>
+          <Dropzone
+            onDrop={onSelectImage}
+            onReject={() => {
+              notifications.show({
+                title: 'ファイルのアップロードに失敗しました',
+                message: '',
+                icon: <BiErrorCircle />,
+                withCloseButton: true,
+                autoClose: 8000,
+                color: 'red',
+              })
+            }}
+            maxSize={100 * 1024 ** 2}
+            accept={IMAGE_MIME_TYPE}
+            className={styles.dropzone}
+            disabled={isDisabled || isLoading}
           >
-            <img src={objectUrl} alt="" style={{ width: "100%" }} />
-          </ReactCrop>
-        </ActionModal>
-      )}
+            <FlexBox gap={16} justify="center">
+              <Dropzone.Accept>
+                <AiOutlineUpload color="#777" size={50} />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <RxCross1 color="#777" size={50} />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <MdOutlineAddPhotoAlternate color="#777" size={50} />
+              </Dropzone.Idle>
+              <span className={styles.label}>
+                クリックしてファイルを選択、
+                <br />
+                もしくはドラッグ＆ドロップしてください
+              </span>
+              {isLoading && <LoadingOverlay visible />}
+            </FlexBox>
+            {isDisabled && <Overlay color="#fff" opacity={0.7} />}
+          </Dropzone>
+          {error && <span className={styles.error}>{error}</span>}
 
-      {profileImg && <ImagePreview file={profileImg} onRemove={() => setProfileImg("")} />}
+          {objectUrl && (
+            <ActionModal
+              isOpen={isOpenCropper}
+              onClose={closeCropper}
+              onSave={onCrop}
+              title="画像を編集"
+            >
+              <ReactCrop
+                crop={crop}
+                onChange={(c) => onChangeCrop(c)}
+                aspect={1}
+                circularCrop={true}
+                keepSelection={true}
+              >
+                <img src={objectUrl} alt="" style={{ width: '100%' }} />
+              </ReactCrop>
+            </ActionModal>
+          )}
+        </>
+      )}
     </div>
   )
 }
@@ -182,7 +109,7 @@ export const ImagePreview = ({
   onRemove,
 }: ImagePreviewProps): React.ReactElement => (
   <Box pos="relative">
-    <Image src={file} alt='' />
+    <Image src={file} alt="" />
     <CloseButton
       size="sm"
       variant="light"
