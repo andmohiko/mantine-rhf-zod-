@@ -12,7 +12,7 @@ import ReactCrop from "react-image-crop";
 import { Crop } from "react-image-crop/dist/types";
 
 import styles from './style.module.scss'
-import { useFileInput, FileObject } from './useFileInputByBase64'
+import { FileObject } from './useFileInputToStorage'
 
 import { FlexBox } from '~/components/Base/FlexBox'
 import { ActionModal } from '~/components/Modals/ActionModal'
@@ -166,26 +166,23 @@ export const FileInputWithCropper = ({
           </ReactCrop>
         </ActionModal>
       )}
-      <div>
-        {profileImg ? <img src={profileImg} alt="プロフィール画像" /> : null}
-      </div>
+
+      {profileImg && <ImagePreview file={profileImg} onRemove={() => setProfileImg("")} />}
     </div>
   )
 }
 
 type ImagePreviewProps = {
   file: FileObject
-  index: number
-  onRemove: (index: number) => void
+  onRemove: () => void
 }
 
 export const ImagePreview = ({
   file,
-  index,
   onRemove,
 }: ImagePreviewProps): React.ReactElement => (
   <Box pos="relative">
-    <Image src={file.object_url} alt={file.file_name} />
+    <Image src={file} alt='' />
     <CloseButton
       size="sm"
       variant="light"
@@ -193,7 +190,7 @@ export const ImagePreview = ({
       top={4}
       right={4}
       color="gray"
-      onClick={() => onRemove(index)}
+      onClick={onRemove}
     />
   </Box>
 )

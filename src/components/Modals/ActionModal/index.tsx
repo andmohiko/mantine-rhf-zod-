@@ -1,11 +1,10 @@
-import { Modal, UnstyledButton } from '@mantine/core'
+import { Modal } from '@mantine/core'
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 import styles from './style.module.scss'
 
 import { BasicButton } from '~/components/Buttons/BasicButton';
 import { IconButton } from '~/components/Buttons/IconButton'
-
 
 type Props = {
   children: React.ReactNode
