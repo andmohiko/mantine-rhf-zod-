@@ -39,8 +39,8 @@ export const ImageCropForm = (): React.ReactNode => {
           control={control}
           render={({ field }) => (
             <FileInputWithCropper
-              defaultValue={field.value}
-              setFile={field.onChange}
+              value={field.value}
+              onChange={field.onChange}
               error={errors.file?.message}
             />
           )}

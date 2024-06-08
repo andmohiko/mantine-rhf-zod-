@@ -1,4 +1,4 @@
-import { LoadingOverlay, Image, Box, CloseButton, Overlay } from '@mantine/core'
+import { LoadingOverlay, Image, CloseButton, Overlay } from '@mantine/core'
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
 import { notifications } from '@mantine/notifications'
 import { AiOutlineUpload } from 'react-icons/ai'
@@ -15,21 +15,21 @@ import { FlexBox } from '~/components/Base/FlexBox'
 import { ActionModal } from '~/components/Modals/ActionModal'
 
 type Props = {
-  defaultValue: FileObject
-  setFile: (file: FileObject | undefined) => void
+  value: FileObject
+  onChange: (file: FileObject | undefined) => void
   error: string | undefined
 }
 
 export const FileInputWithCropper = ({
-  defaultValue,
-  setFile,
+  value,
+  onChange,
   error,
 }: Props): React.ReactElement => {
   const [
     { file, uncroppedImageUrl, crop },
     { onSelectImage, remove, onCrop, onChangeCrop, closeCropper },
     { isOpenCropper, isDisabled, isLoading },
-  ] = useCropImageInput(defaultValue, setFile)
+  ] = useCropImageInput(value, onChange)
 
   return (
     <div>
@@ -84,7 +84,15 @@ export const FileInputWithCropper = ({
                 circularCrop={true}
                 keepSelection={true}
               >
-                <img src={uncroppedImageUrl} alt="" style={{ width: '100%' }} />
+                <img
+                  src={uncroppedImageUrl}
+                  alt=""
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    maxHeight: 400,
+                  }}
+                />
               </ReactCrop>
             </ActionModal>
           )}
