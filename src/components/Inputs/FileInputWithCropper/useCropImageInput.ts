@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef, RefObject } from 'react'
 
 import { useDisclosure } from '@mantine/hooks'
 import { type Crop } from 'react-image-crop'
@@ -16,6 +16,7 @@ export const useCropImageInput = (
 ): [
   {
     file: FileObject | undefined
+    selectedImageRef: RefObject<HTMLImageElement>
     uncroppedImageUrl: string | undefined
     crop: Crop
   },
@@ -36,6 +37,7 @@ export const useCropImageInput = (
   const isDisabled = Boolean(file)
   const [isOpen, handlers] = useDisclosure()
   const [fileData, setFileData] = useState<File | undefined>()
+  const imageRef = useRef<HTMLImageElement>(null)
   const [uncroppedImageUrl, setUncroppedImageUrl] = useState<
     string | undefined
   >()
@@ -58,10 +60,10 @@ export const useCropImageInput = (
 
   // 切り取った画像のObjectUrlを作成し、フォームに保存する
   const createCroppedImageUrl = async () => {
-    if (uncroppedImageUrl) {
+    if (uncroppedImageUrl && imageRef.current) {
       const img = await loadImage(uncroppedImageUrl)
-      const scaleX = img.naturalWidth / img.width
-      const scaleY = img.naturalHeight / img.height
+      const scaleX = img.naturalWidth / imageRef.current.width
+      const scaleY = img.naturalHeight / imageRef.current.height
 
       const canvas = document.createElement('canvas')
       canvas.width = crop.width
@@ -131,6 +133,7 @@ export const useCropImageInput = (
   return [
     {
       file,
+      selectedImageRef: imageRef,
       uncroppedImageUrl,
       crop,
     },
