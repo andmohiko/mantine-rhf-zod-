@@ -5,7 +5,10 @@ import { Notifications } from '@mantine/notifications'
 
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import '@mantine/dropzone/styles.css'
 import '@mantine/notifications/styles.css'
+
+import 'react-image-crop/dist/ReactCrop.css'
 
 import type { AppProps } from 'next/app'
 
