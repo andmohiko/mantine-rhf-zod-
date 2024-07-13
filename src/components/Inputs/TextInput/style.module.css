@@ -1,0 +1,94 @@
+.textInput {
+  position: relative;
+
+  & .inputArea {
+    margin-bottom: 8px;
+    position: relative;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.6, 0, 0.6, 0.6);
+
+    & .label {
+      color: var(--color-gray2);
+      cursor: text;
+      left: 16px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: font-size, top;
+      transition-duration: inherit;
+      transition-timing-function: inherit;
+    }
+
+    & .icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    & .input {
+      border-radius: 16px;
+      box-shadow: 0 0 0 1px var(--color-light-gray1) inset;
+      box-sizing: border-box;
+      outline: none;
+      padding: 24px 16px 8px;
+      resize: vertical;
+      transition: box-shadow;
+      transition-duration: inherit;
+      transition-timing-function: inherit;
+      width: 100%;
+
+      &::placeholder {
+        color: var(--color-light-gray1);
+        opacity: 0;
+        transition: opacity;
+        transition-duration: inherit;
+        transition-timing-function: inherit;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 2px var(--color-black1) inset;
+
+        &::placeholder {
+          opacity: 1;
+        }
+
+        & + .label {
+          font-size: 11px;
+          top: 14px;
+        }
+      }
+
+      &._filled {
+        & + .label {
+          font-size: 11px;
+          top: 14px;
+        }
+      }
+
+      &._error {
+        &:not(&:focus) {
+          box-shadow: 0 0 0 1px var(--color-red) inset;
+        }
+
+        & + .label {
+          color: var(--color-red);
+        }
+      }
+
+      &._disabled {
+        background-color: var(--color-light-gray2);
+        color: var(--color-gray2);
+      }
+
+      &._password {
+        padding-right: 50px;
+      }
+    }
+  }
+
+  & .message {
+    color: var(--color-red);
+    font-size: 13px;
+  }
+}
