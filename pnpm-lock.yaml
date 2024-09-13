@@ -19,7 +19,7 @@ dependencies:
     version: 7.11.1(@mantine/hooks@7.11.1)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/dates':
     specifier: ^7.10.1
-    version: 7.11.1(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(dayjs@1.11.11)(react-dom@18.2.0)(react@18.2.0)
+    version: 7.11.1(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(dayjs@1.11.13)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/dropzone':
     specifier: ^7.10.1
     version: 7.11.1(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(react-dom@18.2.0)(react@18.2.0)
@@ -43,7 +43,7 @@ dependencies:
     version: 2.5.1
   dayjs:
     specifier: ^1.11.7
-    version: 1.11.11
+    version: 1.11.13
   firebase:
     specifier: ^9.22.0
     version: 9.23.0
@@ -994,7 +994,7 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/dates@7.11.1(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(dayjs@1.11.11)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/dates@7.11.1(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(dayjs@1.11.13)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Km0WGaftHPK+oqCjvg2gdzxWsDS7seZdUx6VFQE0m35zouiSaRRFCrfo/NOKGS8ctKC/VsYdFQr+EkDxG+EEjg==}
     peerDependencies:
       '@mantine/core': 7.11.1
@@ -1006,7 +1006,7 @@ packages:
       '@mantine/core': 7.11.1(@mantine/hooks@7.11.1)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.11.1(react@18.2.0)
       clsx: 2.1.1
-      dayjs: 1.11.11
+      dayjs: 1.11.13
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -1856,8 +1856,8 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
-  /dayjs@1.11.11:
-    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+  /dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
     dev: false
 
   /debug@3.2.7:
